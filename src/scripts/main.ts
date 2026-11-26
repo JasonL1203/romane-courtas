@@ -108,7 +108,7 @@ function intro() {
 
   if (dejaVu && vt) {
     // la page arrive en glissant : on lance les apparitions pendant qu'elle monte
-    tl.add(flush, 0.45);
+    tl.add(flush, 0.55);
   } else if (dejaVu && curtain) {
     // arrivée depuis une autre page : le rideau remonte
     // arrivée depuis une autre page : les volets continuent vers le haut, le contenu apparaît dessous

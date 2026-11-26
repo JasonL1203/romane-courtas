@@ -209,35 +209,18 @@ body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 20px; p
   main[data-page-name='projets'] { --card-h: 210px; }
 }
 
-/* ── Changement de page : une onde bleue part du lien cliqué et révèle la nouvelle page ── */
-@property --vr { syntax: '<length>'; inherits: false; initial-value: 0px; }
+/* ── Changement de page : « traversée » — on fonce à travers la page pour arriver sur la suivante ── */
 @view-transition { navigation: auto; }
-.header { view-transition-name: entete; }
-.onde { position: fixed; inset: 0; z-index: 185; pointer-events: none; view-transition-name: onde; }
 ::view-transition { background: #050506; }
-::view-transition-group(root), ::view-transition-group(onde) { animation: none; }
-::view-transition-image-pair(root), ::view-transition-image-pair(onde) { isolation: auto; }
-::view-transition-old(root), ::view-transition-new(root), ::view-transition-new(onde) {
-  mix-blend-mode: normal; animation-duration: 1.25s; animation-timing-function: cubic-bezier(.66, 0, .2, 1); animation-fill-mode: both;
+::view-transition-group(root) { animation: none; }
+::view-transition-image-pair(root) { isolation: auto; }
+::view-transition-old(root), ::view-transition-new(root) {
+  mix-blend-mode: normal; animation-duration: 1.1s; animation-timing-function: cubic-bezier(.7, 0, .2, 1); animation-fill-mode: both; transform-origin: 50% 50%;
 }
-/* l'ancienne page s'enfonce : elle grossit, se floute et s'assombrit */
-::view-transition-old(root) { animation-name: vt-fond; transform-origin: var(--vx, 50%) var(--vy, 50%); }
-/* la nouvelle page apparaît dans un cercle qui grandit depuis le point cliqué */
-::view-transition-new(root) {
-  animation-name: vt-rayon;
-  clip-path: circle(max(0px, calc(var(--vr) - 9vmax)) at var(--vx, 50%) var(--vy, 50%));
-}
-/* anneau bleu lumineux sur le bord du cercle */
-::view-transition-old(onde) { display: none; }
-::view-transition-new(onde) {
-  animation-name: vt-rayon; width: 100%; height: 100%;
-  background: radial-gradient(circle at var(--vx, 50%) var(--vy, 50%), #9fb2ff 0, #5c79ff calc(var(--vr) - 8.5vmax), var(--accent) calc(var(--vr) - 5vmax), #1a33c0 var(--vr));
-  -webkit-mask-image: radial-gradient(circle at var(--vx, 50%) var(--vy, 50%), transparent calc(var(--vr) - 9vmax), #000 calc(var(--vr) - 9vmax + 1px), #000 calc(var(--vr) - 1px), transparent var(--vr));
-  mask-image: radial-gradient(circle at var(--vx, 50%) var(--vy, 50%), transparent calc(var(--vr) - 9vmax), #000 calc(var(--vr) - 9vmax + 1px), #000 calc(var(--vr) - 1px), transparent var(--vr));
-}
-::view-transition-group(entete) { animation-duration: .6s; }
-@keyframes vt-rayon { from { --vr: 0px; } to { --vr: 175vmax; } }
-@keyframes vt-fond { to { transform: scale(1.14); filter: blur(10px) brightness(.4); } }
+::view-transition-old(root) { animation-name: vt-part; z-index: 2; }
+::view-transition-new(root) { animation-name: vt-vient; z-index: 1; }
+@keyframes vt-part { to { transform: scale(3.6); filter: blur(16px); opacity: 0; } }
+@keyframes vt-vient { from { transform: scale(.5); filter: blur(12px); opacity: 0; } 35% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
