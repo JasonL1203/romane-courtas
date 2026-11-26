@@ -50,6 +50,8 @@ const flush = () => {
 /* ── Transitions entre les pages ────────────────────── */
 const curtain = $('.curtain');
 const volets = $$('.curtain i');
+// navigateurs récents : le navigateur anime lui-même le passage d'une page à l'autre
+const vt = document.documentElement.classList.contains('vt');
 function pageLinks() {
   $$<HTMLAnchorElement>('a[data-page]').forEach((a) =>
     a.addEventListener('click', (e) => {
@@ -61,6 +63,7 @@ function pageLinks() {
         lenis.scrollTo(0, { duration: 1.2 });
         return;
       }
+      if (vt) return;
       e.preventDefault();
       lenis.stop();
       // la page recule légèrement pendant que les volets montent l'un après l'autre
@@ -93,7 +96,10 @@ function intro() {
     sessionStorage.setItem('pf-vu', '1');
   } catch {}
 
-  if (dejaVu && curtain) {
+  if (dejaVu && vt) {
+    // la page arrive en glissant : on lance les apparitions pendant qu'elle monte
+    tl.add(flush, 0.3);
+  } else if (dejaVu && curtain) {
     // arrivée depuis une autre page : le rideau remonte
     // arrivée depuis une autre page : les volets continuent vers le haut, le contenu apparaît dessous
     tl.fromTo(volets, { y: 0, yPercent: 0 }, { yPercent: -101, duration: reduce ? 0 : 0.8, ease: 'expo.inOut', stagger: reduce ? 0 : 0.055 }, 0.05)

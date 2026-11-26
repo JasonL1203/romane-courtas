@@ -24,6 +24,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <script is:inline>
       try { if (sessionStorage.getItem('pf-vu')) document.documentElement.classList.add('deja-vu'); } catch (e) {}
+      if ('CSSViewTransitionRule' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('vt');
     </script>
   </head>
   <body class="is-loading">
@@ -67,6 +68,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         box-shadow: -18px 0 40px -18px rgba(3, 8, 50, .55) inset;
       }
       html.deja-vu .curtain i { transform: translateY(0); }
+      html.vt .curtain { display: none; }
       .preloader::after {
         content: ''; position: absolute; left: -15%; width: 130%; height: 22vh; border-radius: 50%; background: inherit; bottom: -11vh;
       }

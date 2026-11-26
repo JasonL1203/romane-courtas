@@ -208,3 +208,26 @@ body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 20px; p
 @media (max-height: 520px) {
   main[data-page-name='projets'] { --card-h: 210px; }
 }
+
+/* ── Changement de page : la nouvelle page glisse par-dessus l'ancienne, qui recule ── */
+@view-transition { navigation: auto; }
+.header { view-transition-name: entete; }
+::view-transition { background: #050506; }
+::view-transition-group(root) { animation: none; }
+::view-transition-image-pair(root) { isolation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) { mix-blend-mode: normal; animation-duration: .95s; animation-timing-function: cubic-bezier(.76, 0, .24, 1); animation-fill-mode: both; }
+::view-transition-old(root) { animation-name: vt-recule; transform-origin: 50% 35%; z-index: 0; }
+::view-transition-new(root) { animation-name: vt-monte; z-index: 1; }
+::view-transition-group(entete) { animation-duration: .6s; z-index: 2; }
+@keyframes vt-recule {
+  to { transform: scale(.88) translateY(-5vh); filter: brightness(.3) blur(3px); clip-path: inset(0 round 28px); }
+}
+@keyframes vt-monte {
+  from { transform: translateY(100%); clip-path: inset(0 round 44px 44px 0 0); }
+  70% { clip-path: inset(0 round 30px 30px 0 0); }
+  to { transform: translateY(0); clip-path: inset(0 round 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
