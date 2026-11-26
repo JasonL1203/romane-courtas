@@ -113,8 +113,8 @@ function intro() {
   if (!dejaVu) tl.add(flush, '-=0.5');
 
   if ($('.hero__char')) {
-    tl.from('.hero__char', { yPercent: 110, rotate: 6, duration: 1.4, stagger: 0.07 }, dejaVu ? 0.45 : pre && !reduce ? '-=0.6' : 0)
-      .from('[data-hero-line]', { yPercent: 110, duration: 1.2, stagger: 0.1 }, '-=1.1')
+    tl.from('.hero__name', { autoAlpha: 0, duration: 0.8, ease: 'power1.out' }, dejaVu ? 0.45 : pre && !reduce ? '-=0.6' : 0)
+      .from('[data-hero-line]', { autoAlpha: 0, duration: 0.8, ease: 'power1.out' }, '-=0.5')
       .from('[data-hero-fade]', { autoAlpha: 0, y: 16, duration: 1, stagger: 0.08 }, '-=1');
   }
   if (!dejaVu) tl.from('[data-header]', { autoAlpha: 0, y: -20, duration: 1 }, '-=0.8');
@@ -188,7 +188,7 @@ function scrollAnimations() {
 
   // titres : lignes qui montent
   $$('[data-reveal]').forEach((el) => {
-    const tw = gsap.from(el, { yPercent: 110, duration: 1.2, ease: 'expo.out', paused: true });
+    const tw = gsap.from(el, { autoAlpha: 0, duration: 0.7, ease: 'power1.out', paused: true });
     ScrollTrigger.create({
       trigger: el.closest('h1, h2') ?? el,
       start: 'top 85%',
