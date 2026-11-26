@@ -198,9 +198,13 @@ body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 20px; p
   body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 12px; padding-top: 14px; }
   body:has(main[data-page-name='projets']) .footer__links a { font-size: 20px; }
 }
-/* écrans étroits : la carte prend toute la hauteur disponible */
-@media (max-width: 900px) {
-  main[data-page-name='projets'] { --card-h: clamp(170px, calc(100svh - 420px), 680px); }
-  main[data-page-name='projets'] .card { width: 72vw; }
+/* téléphones et tablettes en portrait : la carte prend toute la hauteur disponible */
+@media (max-width: 900px) and (orientation: portrait) {
+  main[data-page-name='projets'] { --card-h: clamp(170px, calc(100svh - clamp(84px, 11vh, 120px) - clamp(40px, 8vw, 120px) - 292px), 720px); }
+  main[data-page-name='projets'] .card { width: min(72vw, calc(var(--card-h) * .78)); }
   main[data-page-name='projets'] .card__media { aspect-ratio: auto; height: var(--card-h); }
+}
+/* téléphone à l'horizontale : trop peu de hauteur, la page défile un peu */
+@media (max-height: 520px) {
+  main[data-page-name='projets'] { --card-h: 210px; }
 }

@@ -66,6 +66,8 @@ const initiales = (n: string) => n.split(/[\s+]+/).filter(Boolean).slice(0, 2).m
   .tl__float-ph small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
   @media (hover: none), (pointer: coarse) { .tl__float { display: none; } }
   @media (max-width: 900px) {
+    .tl { padding-block: clamp(44px, 7vh, 80px); border-radius: 22px; }
+    .tl__head { margin-bottom: clamp(28px, 5vh, 56px); }
     .tl__row { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; align-items: start; }
     .tl__float { display: none; }
   }

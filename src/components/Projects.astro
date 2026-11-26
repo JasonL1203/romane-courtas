@@ -117,6 +117,10 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
     box-shadow: 0 60px 90px -36px rgba(0, 0, 0, 1), 0 40px 110px -34px color-mix(in srgb, var(--c1) 80%, transparent);
   }
   .card__btn:hover .card__glare { opacity: 1; }
+  @media (hover: none), (pointer: coarse) {
+    .card__btn:hover .card__media { --lift: 0px; }
+    .card__btn:hover .card__glare { opacity: 0; }
+  }
   .card__btn.is-tilting .card__media { transition: transform .12s linear, box-shadow .5s var(--ease); }
   .card__img {
     position: absolute; inset: 0; background-size: cover; background-position: center;
