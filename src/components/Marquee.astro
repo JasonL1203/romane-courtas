@@ -18,7 +18,7 @@ const rangee = [...mots, ...mots];
 <style>
   .marquee { padding: clamp(40px, 8vh, 96px) 0; overflow: hidden; }
   .marquee__row { display: flex; white-space: nowrap; transform: rotate(-2deg); background: linear-gradient(180deg, #3d61ff 0%, var(--accent) 55%, #2445e0 100%); color: var(--on-accent); padding: 14px 0; position: relative; z-index: 1; box-shadow: 0 34px 70px -22px rgba(47, 84, 255, .55), 0 14px 30px -12px rgba(0, 0, 0, .6); }
-  .marquee__row--alt { transform: rotate(1.5deg); background: transparent; color: var(--fg); border-block: 1px solid var(--line); margin-top: -6px; z-index: 0; box-shadow: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .marquee__row--alt { transform: rotate(1.5deg); background: transparent; color: var(--fg); border-block: 1px solid var(--line); margin-top: -6px; z-index: 0; box-shadow: none; }
   .marquee__track { display: flex; flex-shrink: 0; will-change: transform; }
   .marquee__track span {
     display: inline-flex; align-items: center; gap: .5em; padding-right: .5em;

@@ -569,17 +569,16 @@ function modal() {
         scale: Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.2,
         x: window.innerWidth / 2 - cx,
         y: window.innerHeight / 2 - cy,
-        filter: 'blur(8px)',
       };
     }
     if (flash) gsap.set(flash, { opacity: 0 });
-    gsap.set(panel, { yPercent: 0, y: 0, clipPath: FULL, scale: reduce ? 1 : 0.55, autoAlpha: 0, filter: reduce ? 'none' : 'blur(14px)' });
+    gsap.set(panel, { yPercent: 0, y: 0, clipPath: FULL, scale: reduce ? 1 : 0.55, autoAlpha: 0 });
     gsap.timeline()
       .to(section, { ...plongee, duration: 0.85, ease: 'power3.in' }, 0)
       .to('.footer, [data-header]', { autoAlpha: 0, duration: 0.25 }, 0)
       .to(section, { autoAlpha: 0, duration: 0.3, ease: 'power1.in' }, 0.6)
       .to(veil, { opacity: 1, duration: 0.4 }, 0.5)
-      .to(panel, { scale: 1, autoAlpha: 1, filter: 'blur(0px)', duration: 0.95, ease: 'expo.out', clearProps: 'filter' }, 0.6)
+      .to(panel, { scale: 1, autoAlpha: 1, duration: 0.95, ease: 'expo.out' }, 0.6)
       .fromTo(closeBtn, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1)
       .from($$('.modal__head > *, .modal__video, .modal__text, .modal__next', current), { y: 60, autoAlpha: 0, duration: 1, stagger: 0.07, ease: 'expo.out' }, 0.8);
     $('.modal__close', m)?.focus({ preventScroll: true });
@@ -612,11 +611,11 @@ function modal() {
         ? { yPercent: -100, y: 0, duration: 0.8, ease: 'expo.inOut' }
         : reduce
           ? { autoAlpha: 0, duration: 0.3 }
-          : { scale: 0.55, autoAlpha: 0, filter: 'blur(14px)', y: 0, duration: 0.55, ease: 'power3.in' }, 0)
+          : { scale: 0.55, autoAlpha: 0, y: 0, duration: 0.55, ease: 'power3.in' }, 0)
       .to(veil, { opacity: 0, duration: 0.4 }, 0.3)
       .to('.footer, [data-header]', { autoAlpha: 1, duration: 0.6 }, 0.7)
       .to(section, { autoAlpha: 1, duration: 0.3, ease: 'power1.out' }, dir === 'up' ? 0.45 : 0.4)
-      .to(section, { scale: 1, x: 0, y: 0, filter: 'blur(0px)', duration: 0.95, ease: 'expo.out', clearProps: 'transform,filter,transformOrigin' }, dir === 'up' ? 0.45 : 0.4);
+      .to(section, { scale: 1, x: 0, y: 0, duration: 0.95, ease: 'expo.out', clearProps: 'transform,transformOrigin' }, dir === 'up' ? 0.45 : 0.4);
   };
 
   // continuer à défiler en bas de la fiche ramène à la liste des projets

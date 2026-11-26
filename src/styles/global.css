@@ -73,7 +73,7 @@ section { position: relative; }
 .grain {
   pointer-events: none;
   position: fixed;
-  inset: -50%;
+  inset: -8%;
   z-index: 90;
   opacity: 0.07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -125,9 +125,8 @@ section { position: relative; }
   text-transform: uppercase;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(13, 13, 12, 0.6);
+  background: rgba(13, 13, 12, 0.72);
   color: var(--fg);
-  backdrop-filter: blur(6px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -152,12 +151,12 @@ h1, h2, h3, .display { font-family: var(--f-display); font-stretch: 112%; text-w
 .aura { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .aura i { position: absolute; display: block; border-radius: 50%; will-change: transform; }
 .aura i:nth-child(1) {
-  width: 90vmax; height: 90vmax; left: -35vmax; top: -45vmax;
+  width: 45vmax; height: 45vmax; left: -12vmax; top: -22vmax; transform: scale(2);
   background: radial-gradient(circle, rgba(47, 84, 255, .30) 0%, rgba(47, 84, 255, .10) 38%, transparent 66%);
   animation: aura-a 22s ease-in-out infinite alternate;
 }
 .aura i:nth-child(2) {
-  width: 70vmax; height: 70vmax; right: -30vmax; bottom: -35vmax;
+  width: 35vmax; height: 35vmax; right: -12vmax; bottom: -17vmax; transform: scale(2);
   background: radial-gradient(circle, rgba(88, 60, 255, .20) 0%, rgba(47, 84, 255, .07) 40%, transparent 66%);
   animation: aura-b 28s ease-in-out infinite alternate;
 }
@@ -165,8 +164,8 @@ h1, h2, h3, .display { font-family: var(--f-display); font-stretch: 112%; text-w
   width: 46vmax; height: 46vmax; left: -23vmax; top: -23vmax; opacity: 0;
   background: radial-gradient(circle, rgba(90, 120, 255, .16) 0%, transparent 62%);
 }
-@keyframes aura-a { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
-@keyframes aura-b { to { transform: translate(-12vmax, -8vmax) scale(1.2); } }
+@keyframes aura-a { to { transform: translate(14vmax, 10vmax) scale(2.3); } }
+@keyframes aura-b { to { transform: translate(-12vmax, -8vmax) scale(2.4); } }
 main, .footer { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .aura i { animation: none; } }
 html.fiche-ouverte main { z-index: 130; }
@@ -219,8 +218,8 @@ body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 20px; p
 }
 ::view-transition-old(root) { animation-name: vt-part; z-index: 2; }
 ::view-transition-new(root) { animation-name: vt-vient; z-index: 1; }
-@keyframes vt-part { to { transform: scale(3.6); filter: blur(16px); opacity: 0; } }
-@keyframes vt-vient { from { transform: scale(.5); filter: blur(12px); opacity: 0; } 35% { opacity: 0; } }
+@keyframes vt-part { to { transform: scale(3.6); opacity: 0; } }
+@keyframes vt-vient { from { transform: scale(.5); opacity: 0; } 35% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
