@@ -225,13 +225,13 @@ function scrollAnimations() {
     });
   });
 
-  // pastilles de compétences
+  // liste des compétences
   gsap.from('[data-skill]', {
-    y: 30,
+    y: 12,
     autoAlpha: 0,
     duration: 0.8,
     stagger: 0.05,
-    ease: 'back.out(1.6)',
+    ease: 'power2.out',
     scrollTrigger: { trigger: '.about__skills', start: 'top 85%' },
   });
 

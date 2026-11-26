@@ -5,7 +5,7 @@ const { next } = Astro.props;
 ---
 <footer class="footer wrap">
   <ul class="footer__links">
-    {profil.liens.map((l) => (<li><a class="btn" href={l.url} target="_blank" rel="noopener">{l.label} <span>↗</span></a></li>))}
+    {profil.liens.map((l) => (<li><a href={l.url} target="_blank" rel="noopener">{l.label}</a></li>))}
   </ul>
   <div class="footer__bottom">
     <span>© {new Date().getFullYear()} {profil.prenom}{profil.nom ? ' ' + profil.nom : ''}</span>
@@ -18,7 +18,9 @@ const { next } = Astro.props;
   .footer__next { display: flex; flex-direction: column; gap: 16px; padding: 40px 0 clamp(48px, 8vh, 96px); border-top: 1px solid var(--line); margin-bottom: clamp(32px, 6vh, 64px); }
   .footer__next-title { font-family: var(--f-display); font-weight: 700; font-size: clamp(56px, 11vw, 190px); line-height: .88; letter-spacing: -.05em; transition: transform .6s var(--ease), color .3s; }
   .footer__next:hover .footer__next-title { transform: translateX(18px); color: var(--accent); }
-  .footer__links { list-style: none; padding: 0; margin: 0 0 40px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .footer__links { list-style: none; padding: 0; margin: 0 0 40px; display: flex; flex-wrap: wrap; gap: 12px clamp(24px, 4vw, 48px); padding-top: 28px; border-top: 1px solid var(--line); }
+  .footer__links a { font-family: var(--f-display); font-weight: 500; font-size: clamp(20px, 2vw, 28px); letter-spacing: -.02em; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; text-decoration-color: var(--line); transition: text-decoration-color .3s; }
+  .footer__links a:hover { text-decoration-color: var(--accent); }
   .footer__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; padding-bottom: 16px; }
   .footer__giant {
     font-family: var(--f-display); font-weight: 800; font-size: 22.6vw; line-height: .75; letter-spacing: -.035em;
