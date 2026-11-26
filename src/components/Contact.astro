@@ -1,0 +1,32 @@
+---
+import { profil } from '../data/site';
+---
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2 class="contact__title">
+      <span class="line-mask"><span data-reveal>Contact</span></span>
+    </h2>
+
+    <div class="contact__cta">
+      <a class="contact__mail" href={`mailto:${profil.email}`} data-magnetic data-cursor="Écrire">
+        <span>{profil.email}</span>
+      </a>
+      <a class="contact__circle" href={`mailto:${profil.email}`} data-magnetic aria-label="M’écrire un e-mail">
+        <span>M’écrire</span>
+      </a>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  .contact { padding-top: clamp(120px, 18vh, 200px); overflow: hidden; }
+  .contact__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(56px, 10vw, 180px); line-height: .88; letter-spacing: -.05em; }
+  .contact__cta { margin-top: clamp(40px, 8vh, 96px); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 32px; }
+  .contact__mail { font-family: var(--f-display); font-size: clamp(24px, 3.4vw, 52px); font-weight: 500; letter-spacing: -.02em; display: inline-block; position: relative; }
+  .contact__mail::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease); }
+  .contact__mail:hover::after { transform: scaleX(1); transform-origin: left; }
+  .contact__circle { width: clamp(130px, 14vw, 190px); aspect-ratio: 1; border-radius: 50%; background: var(--accent); color: var(--ink); display: grid; place-items: center; font-weight: 600; font-size: 17px; transition: transform .4s var(--ease); }
+  .contact__circle:hover { transform: scale(1.06); }
+
+</style>

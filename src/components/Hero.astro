@@ -1,0 +1,85 @@
+---
+import { profil } from '../data/site';
+const lettres = profil.prenom.toUpperCase().split('');
+const sr = profil.showreel;
+const embed = sr.id
+  ? sr.plateforme === 'vimeo'
+    ? `https://player.vimeo.com/video/${sr.id}?autoplay=1&muted=1&loop=1&background=1`
+    : `https://www.youtube-nocookie.com/embed/${sr.id}?autoplay=1&mute=1&loop=1&playlist=${sr.id}&controls=0&rel=0`
+  : '';
+---
+<section class="hero" id="top">
+  <h1 class="hero__name wrap" aria-label={profil.prenom}>
+    {lettres.map((l) => (<span class="hero__char-mask"><span class="hero__char">{l}</span></span>))}
+  </h1>
+  {profil.nom && <p class="hero__surname wrap"><span class="line-mask"><span data-hero-line class="serif accent">{profil.nom}</span></span></p>}
+
+  <div class="hero__bottom wrap">
+    <p class="hero__role">
+      <span class="line-mask"><span data-hero-line>Production</span></span>
+      <span class="line-mask"><span data-hero-line><span class="serif accent">&amp;</span> gestion audiovisuelle</span></span>
+    </p>
+    <p class="hero__pitch" data-hero-fade>{profil.accroche}</p>
+  </div>
+
+</section>
+
+<style>
+  .hero { padding-top: 110px; }
+  .hero__top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 13px; }
+  .hero__name {
+    margin: 2vh 0 0;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 22.6vw;
+    line-height: .82;
+    letter-spacing: -.035em;
+    display: flex; justify-content: space-between;
+    font-variation-settings: 'wdth' 100;
+  }
+  .hero__surname { margin: -.15em 0 0; text-align: right; font-size: clamp(48px, 9vw, 150px); line-height: 1; }
+  .hero__char-mask { display: block; overflow: hidden; padding-top: .04em; }
+  .hero__char { display: block; will-change: transform; }
+
+  .hero__bottom {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: end;
+    margin-top: clamp(24px, 4vh, 48px);
+    padding-bottom: clamp(32px, 6vh, 72px);
+  }
+  .hero__role { margin: 0; font-family: var(--f-display); font-weight: 500; font-size: clamp(28px, 4vw, 60px); line-height: 1; letter-spacing: -.03em; }
+  .hero__role .serif { font-size: 1.1em; }
+  .hero__pitch { margin: 0; color: var(--muted); max-width: 42ch; font-size: 15px; }
+  .hero__scroll { display: inline-flex; flex-direction: column; align-items: center; gap: 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+  .hero__scroll svg { animation: nudge 1.6s var(--ease) infinite; }
+  @keyframes nudge { 0%,100% { transform: translateY(0) } 50% { transform: translateY(6px) } }
+
+  .reel { height: 100vh; padding-inline: var(--gutter); display: flex; align-items: flex-start; }
+  .reel__frame {
+    width: 100%; height: calc(100vh - 2 * var(--gutter)); position: relative; overflow: hidden;
+    border-radius: 18px; background: var(--bg-2);
+    clip-path: inset(0 22% 0 22% round 18px);
+    will-change: clip-path;
+  }
+  .reel__frame iframe { width: 100%; height: 100%; border: 0; pointer-events: none; transform: scale(1.2); }
+  .reel__placeholder { position: absolute; inset: 0; overflow: hidden; }
+  .reel__blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .85; }
+  .reel__blob--a { width: 60vw; height: 60vw; background: var(--accent); left: -10vw; top: -20vw; animation: drift 14s ease-in-out infinite alternate; }
+  .reel__blob--b { width: 45vw; height: 45vw; background: #3d1cff; right: -10vw; bottom: -15vw; animation: drift 18s ease-in-out infinite alternate-reverse; }
+  .reel__blob--c { width: 30vw; height: 30vw; background: #ffcf3d; left: 40%; top: 30%; animation: drift 11s ease-in-out infinite alternate; opacity: .55; }
+  @keyframes drift { to { transform: translate(12vw, 8vw) scale(1.2); } }
+  .reel__label { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 8px; color: var(--fg); }
+  .reel__label .serif { font-size: clamp(56px, 11vw, 180px); line-height: .9; }
+  .reel__label small { font-size: 13px; opacity: .8; }
+  .reel__rec { position: absolute; top: 20px; left: 22px; font-size: 12px; letter-spacing: .12em; display: inline-flex; gap: 8px; align-items: center; }
+  .reel__rec i { width: 9px; height: 9px; border-radius: 50%; background: #ff2a2a; animation: pulse 1.2s infinite; }
+  .reel__tc { position: absolute; top: 20px; right: 22px; font-size: 12px; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .2 } }
+
+  @media (max-width: 900px) {
+    .hero__bottom { grid-template-columns: 1fr; gap: 20px; }
+    .hero__scroll { display: none; }
+    .reel { height: auto; padding-bottom: var(--gutter); }
+    .reel__frame { height: auto; aspect-ratio: 4 / 5; clip-path: inset(0 8% 0 8% round 18px); }
+  }
+  @media (max-width: 900px) and (orientation: landscape) { .reel__frame { aspect-ratio: 16/9; } }
+</style>

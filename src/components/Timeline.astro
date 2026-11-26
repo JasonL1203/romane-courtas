@@ -1,0 +1,52 @@
+---
+import { parcours } from '../data/site';
+---
+<section class="tl" id="parcours" data-theme-light>
+  <div class="wrap">
+    <div class="tl__head">
+      <h2 class="tl__title">
+        <span class="line-mask"><span data-reveal>Parcours</span></span>
+      </h2>
+    </div>
+    <ol class="tl__list">
+      {parcours.map((e) => (
+        <li class="tl__row" data-row>
+          <span class="tl__line" data-row-line></span>
+          <span class="tl__period">{e.periode}</span>
+          <h3 class="tl__org">{e.structure}</h3>
+          <div class="tl__desc">
+            <strong>{e.poste}</strong>
+            <p>{e.texte}</p>
+          </div>
+          <span class="tl__arrow" aria-hidden="true">↗</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tl { background: var(--paper); color: var(--ink); padding-block: clamp(80px, 14vh, 180px); border-radius: 28px; margin-inline: clamp(6px, 1vw, 14px); }
+  .tl .eyebrow { color: #5d5a54; }
+  .tl__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(40px, 8vh, 96px); }
+  .tl__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(52px, 8vw, 140px); line-height: .88; letter-spacing: -.05em; text-align: right; }
+  .tl__list { list-style: none; margin: 0; padding: 0; }
+  .tl__row {
+    position: relative; display: grid; grid-template-columns: 160px 1.2fr 1fr 40px; gap: 24px; align-items: baseline;
+    padding: 34px 0; transition: padding .5s var(--ease);
+  }
+  .tl__row:last-child { border-bottom: 1px solid rgba(13,13,12,.18); }
+  .tl__line { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: rgba(13,13,12,.18); transform-origin: left; }
+  .tl__period { font-size: 14px; color: #6b6861; font-variant-numeric: tabular-nums; }
+  .tl__org { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: clamp(30px, 4vw, 64px); line-height: 1; letter-spacing: -.035em; transition: translate .5s var(--ease), rotate .5s var(--ease), color .3s; }
+  .tl__desc strong { font-weight: 600; display: block; margin-bottom: 6px; }
+  .tl__desc p { margin: 0; color: #55524c; font-size: 15px; }
+  .tl__arrow { font-size: 26px; justify-self: end; transition: translate .5s var(--ease), rotate .5s var(--ease), color .3s; }
+  .tl__row:hover .tl__org { translate: 14px 0; color: var(--accent); }
+  .tl__row:hover .tl__arrow { rotate: 45deg; color: var(--accent); }
+  @media (max-width: 900px) {
+    .tl__title { text-align: left; }
+    .tl__row { grid-template-columns: 1fr; gap: 10px; padding: 28px 0; align-items: start; }
+    .tl__arrow { display: none; }
+  }
+</style>

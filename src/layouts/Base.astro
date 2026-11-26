@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import { profil } from '../data/site';
+import { suivante } from '../data/pages';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+interface Props { page?: string; titre?: string; description?: string }
+const nomComplet = `${profil.prenom}${profil.nom ? ' ' + profil.nom : ''}`;
+const { page = '', titre, description = profil.accroche } = Astro.props;
+const title = titre ? `${titre} · ${nomComplet}` : `${nomComplet} · ${profil.metier}`;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0d0d0c" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <script is:inline>
+      try { if (sessionStorage.getItem('pf-vu')) document.documentElement.classList.add('deja-vu'); } catch (e) {}
+    </script>
+  </head>
+  <body class="is-loading">
+    <div class="preloader" aria-hidden="true">
+      <div class="preloader__inner">
+        <span class="preloader__name">{profil.prenom}<span class="serif accent"> — portfolio</span></span>
+        <span class="preloader__count"><span data-count>0</span>%</span>
+      </div>
+      <div class="preloader__bar"><span></span></div>
+    </div>
+    <div class="curtain" aria-hidden="true"><span class="curtain__label serif" data-curtain-label>{titre ?? profil.prenom}</span></div>
+    <div class="grain" aria-hidden="true"></div>
+    <Header actif={page} />
+    <main id="top" data-page-name={page || 'accueil'}>
+      <slot />
+    </main>
+    <Footer next={page ? suivante(page) : undefined} />
+    <script>
+      import '../scripts/main';
+    </script>
+    <style is:global>
+      .preloader {
+        position: fixed; inset: 0; z-index: 200;
+        background: var(--accent); color: var(--ink);
+        display: flex; flex-direction: column; justify-content: flex-end;
+        padding: var(--gutter);
+      }
+      .preloader__inner { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+      .preloader__name { font-family: var(--f-display); font-size: clamp(22px, 3vw, 36px); font-weight: 600; }
+      .preloader__name .serif { color: var(--ink); opacity: .7; }
+      .preloader__count { font-family: var(--f-display); font-weight: 700; font-size: clamp(72px, 16vw, 220px); line-height: .8; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+      .preloader__bar { height: 2px; background: rgba(13,13,12,.2); margin-top: 24px; }
+      .preloader__bar span { display: block; height: 100%; width: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0); }
+      html.deja-vu .preloader { display: none; }
+      .curtain {
+        position: fixed; inset: 0; z-index: 190; background: var(--accent); color: var(--ink);
+        display: grid; place-items: center; transform: translateY(101%); pointer-events: none;
+      }
+      html.deja-vu .curtain { transform: translateY(0); }
+      .curtain__label { font-size: clamp(64px, 12vw, 200px); line-height: 1; }
+    </style>
+  </body>
+</html>

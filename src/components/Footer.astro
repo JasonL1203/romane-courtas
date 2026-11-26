@@ -1,0 +1,28 @@
+---
+import { profil } from '../data/site';
+interface Props { next?: { label: string; href: string } }
+const { next } = Astro.props;
+---
+<footer class="footer wrap">
+  <ul class="footer__links">
+    {profil.liens.map((l) => (<li><a class="btn" href={l.url} target="_blank" rel="noopener">{l.label} <span>↗</span></a></li>))}
+  </ul>
+  <div class="footer__bottom">
+    <span>© {new Date().getFullYear()} {profil.prenom}{profil.nom ? ' ' + profil.nom : ''}</span>
+    <a href="#top" data-link>Retour en haut ↑</a>
+  </div>
+</footer>
+
+<style>
+  .footer { overflow: hidden; padding-top: clamp(60px, 10vh, 120px); }
+  .footer__next { display: flex; flex-direction: column; gap: 16px; padding: 40px 0 clamp(48px, 8vh, 96px); border-top: 1px solid var(--line); margin-bottom: clamp(32px, 6vh, 64px); }
+  .footer__next-title { font-family: var(--f-display); font-weight: 700; font-size: clamp(56px, 11vw, 190px); line-height: .88; letter-spacing: -.05em; transition: transform .6s var(--ease), color .3s; }
+  .footer__next:hover .footer__next-title { transform: translateX(18px); color: var(--accent); }
+  .footer__links { list-style: none; padding: 0; margin: 0 0 40px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .footer__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; padding-bottom: 16px; }
+  .footer__giant {
+    font-family: var(--f-display); font-weight: 800; font-size: 22.6vw; line-height: .75; letter-spacing: -.035em;
+    color: transparent; -webkit-text-stroke: 1px rgba(242,239,232,.25);
+    text-align: center; margin-bottom: -2vw; user-select: none;
+  }
+</style>
