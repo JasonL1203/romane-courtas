@@ -19,13 +19,14 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
     <ul class="projects__track" data-carousel-track>
       {[0, 1].map((copie) =>
         projets.map((p, i) => (
-          <li class="card" data-card aria-hidden={copie ? 'true' : undefined}>
+          <li class="card" data-card aria-hidden={copie ? 'true' : undefined} style={`--c1:${p.teinte[0]};--c2:${p.teinte[1]}`}>
             <button class="card__btn" data-open={p.slug} data-cursor="Voir" tabindex={copie ? -1 : undefined} aria-label={`Ouvrir le projet ${p.titre}`}>
               <div class="card__media">
                 <div class="card__img" style={p.image ? `background-image:url(${base}${p.image})` : `--c1:${p.teinte[0]};--c2:${p.teinte[1]}`}>
                   {!p.image && <span class="card__big serif">{p.titre.split(' ')[0]}</span>}
                 </div>
                 {!p.image && <span class="placeholder-tag">Visuel à venir</span>}
+                <span class="card__glare"></span>
               </div>
               <div class="card__info">
                 <h3 class="card__title">{p.titre}</h3>
@@ -42,6 +43,7 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
 <div class="modal" data-modal aria-hidden="true">
   <div class="modal__veil" data-close></div>
   <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Détail du projet" data-lenis-prevent>
+    <div class="modal__flash" data-flash aria-hidden="true"></div>
     {projets.map((p, i) => (
       <article class="modal__item" data-project={p.slug} hidden>
         <header class="modal__head">
@@ -78,24 +80,44 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
 </div>
 
 <style>
-  .projects { background: var(--bg); padding-block: clamp(30px, 6vh, 80px) 0; overflow: hidden; }
-  .projects__intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(40px, 7vh, 80px); }
+  .projects { padding-block: clamp(30px, 6vh, 80px) clamp(40px, 8vh, 90px); overflow: hidden; transform-origin: 50% 30%; }
+  .projects__intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(20px, 4vh, 48px); }
   .projects__intro .eyebrow { margin-bottom: 20px; }
   .projects__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(52px, 8vw, 140px); line-height: 1; letter-spacing: -.03em; }
   .projects__hint { margin: 0; color: var(--muted); font-size: 14px; max-width: 30ch; text-align: right; }
 
-  .carousel { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .carousel { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; perspective: 1500px; padding-block: 30px 70px; }
   
-  .projects__track { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(16px, 2.4vw, 36px); width: max-content; will-change: transform; }
+  .projects__track { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(16px, 2.4vw, 36px); width: max-content; will-change: transform; transform-style: preserve-3d; }
   .carousel__edge { position: absolute; top: 0; bottom: 0; width: 12vw; pointer-events: none; display: flex; align-items: center; opacity: .0; transition: opacity .4s; color: var(--fg); font-size: 28px; }
   .carousel__edge--l { left: 0; justify-content: flex-start; padding-left: var(--gutter); background: linear-gradient(90deg, var(--bg), transparent); }
   .carousel__edge--r { right: 0; justify-content: flex-end; padding-right: var(--gutter); background: linear-gradient(-90deg, var(--bg), transparent); }
   .carousel.go-left .carousel__edge--l, .carousel.go-right .carousel__edge--r { opacity: 1; }
 
-  .card { flex: 0 0 auto; width: clamp(240px, 26vw, 400px); }
-  .card:nth-child(even) { margin-top: 8vh; }
-  .card__btn { display: block; width: 100%; text-align: left; cursor: pointer; }
-  .card__media { position: relative; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; }
+  .card { flex: 0 0 auto; width: clamp(230px, 22.5vw, 360px); transform-style: preserve-3d; will-change: transform; }
+  .card__btn { display: block; width: 100%; text-align: left; cursor: pointer; transform-style: preserve-3d; }
+  .card__media {
+    position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--lift, 0px));
+    transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+    box-shadow: 0 40px 70px -34px rgba(0, 0, 0, .95), 0 26px 80px -40px color-mix(in srgb, var(--c1) 55%, transparent);
+  }
+  .card__media::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .10) inset, 0 1px 0 0 rgba(255, 255, 255, .28) inset;
+    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, .35) 100%);
+  }
+  .card__glare {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s;
+    background: radial-gradient(60% 50% at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .34), transparent 70%);
+    mix-blend-mode: soft-light;
+  }
+  .card__btn:hover .card__media, .card__btn:focus-visible .card__media {
+    --lift: 46px;
+    box-shadow: 0 60px 90px -36px rgba(0, 0, 0, 1), 0 40px 110px -34px color-mix(in srgb, var(--c1) 80%, transparent);
+  }
+  .card__btn:hover .card__glare { opacity: 1; }
+  .card__btn.is-tilting .card__media { transition: transform .12s linear, box-shadow .5s var(--ease); }
   .card__img {
     position: absolute; inset: 0; background-size: cover; background-position: center;
     background-image: radial-gradient(120% 90% at 20% 15%, var(--c1) 0%, var(--c2) 70%);
@@ -105,7 +127,7 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
   .card__img, .card__img * { pointer-events: none; }
   .card__big { font-size: clamp(38px, 4vw, 72px); color: rgba(255,255,255,.88); mix-blend-mode: overlay; line-height: 1; text-align: center; padding: 0 12px; }
   .card__btn:hover .card__img, .card__btn:focus-visible .card__img { transform: scale(1); }
-  .card__info { display: grid; grid-template-columns: 1fr; row-gap: 2px; align-items: baseline; padding-top: 16px; }
+  .card__info { display: grid; grid-template-columns: 1fr; row-gap: 2px; align-items: baseline; padding-top: 22px; }
   .card__num { color: var(--accent); font-size: 13px; font-variant-numeric: tabular-nums; }
   .card__title { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; }
   .card__cat { color: var(--muted); font-size: 14px; }
@@ -113,7 +135,6 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
   @media (max-width: 900px) {
     .projects__hint { text-align: left; }
     .card { width: 68vw; }
-    .card:nth-child(even) { margin-top: 5vh; }
   }
 
   /* modale */
@@ -127,10 +148,12 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
     padding: clamp(24px, 5vw, 72px) var(--gutter) 0;
     transform: translateY(100%);
   }
+  .modal__flash { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(120% 90% at 20% 15%, var(--c1, #2f54ff) 0%, var(--c2, #0d0d0c) 70%); }
   .modal__close {
     position: fixed; z-index: 3; top: 18px; right: var(--gutter);
     width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
     background: var(--ink); color: var(--paper); font-size: 20px; line-height: 1; cursor: pointer;
+    box-shadow: 0 16px 34px -12px rgba(13, 13, 12, .6);
     opacity: 0; transition: rotate .4s var(--ease), background .3s, color .3s;
   }
   .modal__close:hover { background: var(--accent); color: var(--on-accent); rotate: 90deg; }
@@ -149,10 +172,10 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
   .modal__meta { display: flex; flex-wrap: wrap; gap: 12px 48px; margin: 0 0 40px; padding-top: 18px; border-top: 1px solid rgba(13,13,12,.15); }
   .modal__meta dt { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: #6b6861; }
   .modal__meta dd { margin: 4px 0 0; font-weight: 500; }
-  .modal__video { aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #000; }
+  .modal__video { aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000; box-shadow: 0 60px 100px -50px rgba(13, 13, 12, .75), 0 30px 50px -30px rgba(13, 13, 12, .5); }
   .modal__video iframe { width: 100%; height: 100%; border: 0; }
   .modal__video-ph { position: relative; width: 100%; height: 100%; display: grid; place-items: center; background: radial-gradient(120% 120% at 20% 10%, var(--c1), var(--c2) 70%); }
-  .modal__play { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.9); color: var(--ink); font-size: 24px; padding-left: 5px; }
+  .modal__play { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 24px 50px -14px rgba(0, 0, 0, .6); background: rgba(255,255,255,.92); color: var(--ink); font-size: 24px; padding-left: 5px; }
   .modal__text { max-width: 720px; margin-top: 40px; font-size: 18px; }
   .modal__next { display: flex; flex-direction: column; gap: 14px; width: 100%; margin-top: clamp(64px, 12vh, 140px); padding-top: 32px; border-top: 1px solid rgba(13,13,12,.15); text-align: left; cursor: pointer; }
   .modal__next-title { font-family: var(--f-display); font-weight: 700; font-size: clamp(40px, 7vw, 110px); line-height: .9; letter-spacing: -.045em; transition: color .3s, transform .5s var(--ease); }

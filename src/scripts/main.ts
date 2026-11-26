@@ -34,6 +34,7 @@ let lastY = 0;
 lenis.on('scroll', ({ scroll }: { scroll: number }) => {
   if (!header) return;
   header.classList.toggle('is-hidden', scroll > lastY && scroll > 200);
+  header.classList.toggle('is-scrolled', scroll > 30);
   lastY = scroll;
 });
 
@@ -65,16 +66,19 @@ function pageLinks() {
       lenis.stop();
       gsap.fromTo(
         curtain,
-        { y: 0, yPercent: 101 },
-        { yPercent: 0, duration: 0.8, ease: 'expo.inOut', onComplete: () => (location.href = href) },
+        { y: 0, yPercent: 125 },
+        { yPercent: 0, duration: 0.95, ease: 'expo.inOut', onComplete: () => (location.href = href) },
       );
-      gsap.from(curtainLabel, { yPercent: 60, autoAlpha: 0, duration: 0.8, delay: 0.3, ease: 'expo.out' });
+      // la page qui part recule et s'assombrit sous le rideau
+      gsap.to('main, .footer', { y: -90, scale: 0.96, autoAlpha: 0.35, duration: 0.95, ease: 'expo.inOut' });
+      gsap.fromTo(curtainLabel, { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, delay: 0.35, ease: 'expo.out' });
     }),
   );
   // retour arrière du navigateur : on retire le rideau
   window.addEventListener('pageshow', (e) => {
     if (e.persisted && curtain) {
-      gsap.set(curtain, { y: 0, yPercent: 101 });
+      gsap.set(curtain, { y: 0, yPercent: 125 });
+      gsap.set('main, .footer', { clearProps: 'transform,opacity,visibility' });
       lenis.start();
     }
   });
@@ -93,8 +97,10 @@ function intro() {
 
   if (dejaVu && curtain) {
     // arrivée depuis une autre page : le rideau remonte
-    tl.fromTo(curtain, { y: 0, yPercent: 0 }, { yPercent: -101, duration: reduce ? 0 : 1, ease: 'expo.inOut', delay: 0.1 })
-      .set(curtain, { yPercent: 101 })
+    if (curtainLabel && !reduce) tl.to(curtainLabel, { yPercent: -60, autoAlpha: 0, duration: 0.6, ease: 'expo.in' }, 0);
+    tl.fromTo(curtain, { y: 0, yPercent: 0 }, { yPercent: -125, duration: reduce ? 0 : 1.1, ease: 'expo.inOut' }, 0.1)
+      .set(curtain, { yPercent: 125 })
+      .set(curtainLabel, { yPercent: 0, autoAlpha: 1 })
       .add(flush, reduce ? 0 : 0.55);
   } else if (pre && count && !reduce) {
     tl.to(obj, {
@@ -104,7 +110,7 @@ function intro() {
       onUpdate: () => (count.textContent = String(Math.round(obj.v))),
     })
       .to('.preloader__bar span', { scaleX: 1, duration: 1.6, ease: 'power2.inOut' }, 0)
-      .to(pre, { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, '+=0.15')
+      .to(pre, { yPercent: -125, duration: 1.2, ease: 'expo.inOut' }, '+=0.15')
       .set(pre, { display: 'none' });
   } else if (pre) {
     tl.set(pre, { display: 'none' });
@@ -117,7 +123,7 @@ function intro() {
       .from('[data-hero-line]', { autoAlpha: 0, duration: 0.8, ease: 'power1.out' }, '-=0.5')
       .from('[data-hero-fade]', { autoAlpha: 0, y: 16, duration: 1, stagger: 0.08 }, '-=1');
   }
-  if (!dejaVu) tl.from('[data-header]', { autoAlpha: 0, y: -20, duration: 1 }, '-=0.8');
+  if (!dejaVu) tl.from('[data-header]', { autoAlpha: 0, duration: 1 }, '-=0.8');
   tl.add(() => {
     document.body.classList.remove('is-loading');
     lenis.start();
@@ -238,6 +244,13 @@ function scrollAnimations() {
 
   // projets : carrousel horizontal automatique, piloté par la souris
   carousel();
+  if ($('[data-card]')) {
+    const btns = $$('[data-card] .card__btn');
+    gsap.set(btns, { y: 110, autoAlpha: 0 });
+    whenReady(() => gsap.to(btns, { y: 0, autoAlpha: 1, duration: 1.2, stagger: 0.07, ease: 'expo.out', delay: 0.1, clearProps: 'transform' }));
+  }
+  tilt();
+  aura();
 
   // parcours : les lignes se dessinent
   $$('[data-row]').forEach((row) => {
@@ -253,7 +266,8 @@ function scrollAnimations() {
   // parcours : image qui suit la souris au survol d'une ligne
   const float = $('[data-float]');
   if (float && finePointer) {
-    gsap.set(float, { xPercent: -50, yPercent: -50, scale: 0.8 });
+    gsap.set(float, { xPercent: -50, yPercent: -50, scale: 0.8, transformPerspective: 900 });
+    const fry = gsap.quickTo(float, 'rotationY', { duration: 0.7, ease: 'power3' });
     const fx = gsap.quickTo(float, 'x', { duration: 0.5, ease: 'power3' });
     const fy = gsap.quickTo(float, 'y', { duration: 0.5, ease: 'power3' });
     const fr = gsap.quickTo(float, 'rotate', { duration: 0.6, ease: 'power3' });
@@ -271,12 +285,14 @@ function scrollAnimations() {
         fx(Math.min(e.clientX + 40 + w / 2, window.innerWidth - w / 2 - 16));
         fy(e.clientY);
         fr(gsap.utils.clamp(-8, 8, (e.clientX - lastX) * 0.4));
+        fry(gsap.utils.clamp(-28, 28, (e.clientX - lastX) * 1.4));
         lastX = e.clientX;
       });
     });
     $('.tl__list')?.addEventListener('pointerleave', () => {
       gsap.to(float, { autoAlpha: 0, scale: 0.8, duration: 0.3, ease: 'power2.in', overwrite: 'auto' });
       fr(0);
+      fry(0);
     });
     lenis.on('scroll', () => {
       if (!$('.tl__row:hover')) gsap.to(float, { autoAlpha: 0, scale: 0.8, duration: 0.2, overwrite: 'auto' });
@@ -293,6 +309,7 @@ function scrollAnimations() {
 
 /* ── Carrousel de projets ───────────────────────────── */
 let carouselDragged = false;
+let carouselPaused = false;
 function carousel() {
   const root = $('[data-carousel]');
   const track = $('[data-carousel-track]');
@@ -313,6 +330,28 @@ function carousel() {
   let wheeling = false;
 
   const half = () => track.scrollWidth / 2; // largeur d'un jeu de cartes (le 2e est une copie)
+
+  // mise en volume : les cartes tournent et reculent en s'éloignant du centre, comme sur un tambour
+  const cards = $$('[data-card]', track);
+  let geo: { c: number }[] = [];
+  let vw = window.innerWidth;
+  const measure = () => {
+    vw = window.innerWidth;
+    geo = cards.map((c) => ({ c: c.offsetLeft + c.offsetWidth / 2 }));
+  };
+  measure();
+  window.addEventListener('resize', measure);
+  const paint = () => {
+    track.style.transform = `translate3d(${x}px,0,0)`;
+    if (reduce) return;
+    const angle = vw < 900 ? 16 : 30;
+    const depth = vw < 900 ? 70 : 210;
+    for (let i = 0; i < cards.length; i++) {
+      const n = gsap.utils.clamp(-1.5, 1.5, (geo[i].c + x - vw / 2) / (vw / 2));
+      cards[i].style.transform = `translate3d(0,0,${(-n * n * depth).toFixed(1)}px) rotateY(${(n * angle).toFixed(2)}deg)`;
+    }
+  };
+  paint();
   const loop = () => {
     const w = half();
     if (w <= 0) return;
@@ -350,7 +389,7 @@ function carousel() {
       e.preventDefault();
       x -= dx;
       loop();
-      track.style.transform = `translate3d(${x}px,0,0)`;
+      paint();
       wheeling = true;
       speed = gsap.utils.clamp(-1.5, 1.5, -dx / 16);
       window.clearTimeout(wheelTimer);
@@ -379,7 +418,7 @@ function carousel() {
       dragVel = e.clientX - lastPointerX;
       lastPointerX = e.clientX;
       loop();
-      track.style.transform = `translate3d(${x}px,0,0)`;
+      paint();
     }
   });
   const release = () => {
@@ -393,12 +432,54 @@ function carousel() {
   window.addEventListener('pointercancel', release);
 
   gsap.ticker.add((_, dt) => {
-    if (!visible || dragging || wheeling) return;
+    if (!visible || dragging || wheeling || carouselPaused) return;
     const t = hovering ? target : -BASE;
     speed += (t - speed) * Math.min(1, dt / 250); // accélération douce
     x += speed * dt;
     loop();
-    track.style.transform = `translate3d(${x}px,0,0)`;
+    paint();
+  });
+}
+
+/* ── Cartes projets : inclinaison et reflet sous la souris ── */
+function tilt() {
+  if (!finePointer || reduce) return;
+  $$('.card__btn').forEach((btn) => {
+    const media = $('.card__media', btn);
+    if (!media) return;
+    btn.addEventListener('pointermove', (e) => {
+      const r = media.getBoundingClientRect();
+      const px = gsap.utils.clamp(0, 1, (e.clientX - r.left) / r.width);
+      const py = gsap.utils.clamp(0, 1, (e.clientY - r.top) / r.height);
+      btn.classList.add('is-tilting');
+      media.style.setProperty('--ry', `${((px - 0.5) * 16).toFixed(2)}deg`);
+      media.style.setProperty('--rx', `${((0.5 - py) * 14).toFixed(2)}deg`);
+      media.style.setProperty('--gx', `${(px * 100).toFixed(1)}%`);
+      media.style.setProperty('--gy', `${(py * 100).toFixed(1)}%`);
+    });
+    btn.addEventListener('pointerleave', () => {
+      btn.classList.remove('is-tilting');
+      media.style.setProperty('--ry', '0deg');
+      media.style.setProperty('--rx', '0deg');
+    });
+  });
+}
+
+/* ── Halo de lumière qui suit la souris ─────────────── */
+function aura() {
+  const el = $('[data-aura]');
+  if (!el || !finePointer || reduce) return;
+  const ax = gsap.quickTo(el, 'x', { duration: 1.6, ease: 'power3' });
+  const ay = gsap.quickTo(el, 'y', { duration: 1.6, ease: 'power3' });
+  let on = false;
+  window.addEventListener('pointermove', (e) => {
+    if (!on) {
+      on = true;
+      gsap.set(el, { x: e.clientX, y: e.clientY });
+      gsap.to(el, { opacity: 1, duration: 1.2 });
+    }
+    ax(e.clientX);
+    ay(e.clientY);
   });
 }
 
@@ -432,6 +513,20 @@ function modal() {
   let opener: HTMLElement | null = null;
   let pull = 0;
   let closing = false;
+  const flash = $('[data-flash]', m);
+  const FULL = 'inset(0px 0px 0px 0px round 0px)';
+  // découpe de la fiche aux dimensions de la carte (ou null si la carte n'est plus à l'écran)
+  const cardRect = (from: HTMLElement | null) => {
+    const r = from ? ($('.card__media', from) ?? from).getBoundingClientRect() : null;
+    if (!r || r.right < 40 || r.left > window.innerWidth - 40 || r.bottom < 40 || r.top > window.innerHeight - 40) return null;
+    return r;
+  };
+  const cardClip = (from: HTMLElement | null) => {
+    const r = cardRect(from);
+    if (!r) return `inset(${window.innerHeight * 0.5}px ${window.innerWidth * 0.5}px ${window.innerHeight * 0.5}px ${window.innerWidth * 0.5}px round 18px)`;
+    const c = (v: number) => Math.max(0, v).toFixed(1);
+    return `inset(${c(r.top)}px ${c(window.innerWidth - r.right)}px ${c(window.innerHeight - r.bottom)}px ${c(r.left)}px round 18px)`;
+  };
 
   const open = (slug: string, from: HTMLElement) => {
     current = $(`[data-project="${slug}"]`, m);
@@ -441,16 +536,26 @@ function modal() {
     $$('iframe[data-src]', current).forEach((f) => (f.setAttribute('src', f.dataset.src!)));
     panel.scrollTop = 0;
     m.classList.add('is-open');
+    document.documentElement.classList.add('fiche-ouverte');
     m.setAttribute('aria-hidden', 'false');
     lenis.stop();
     pull = 0;
     closing = false;
-    gsap.set(panel, { yPercent: 100, y: 0 });
+    carouselPaused = true;
+    // la fiche s'ouvre depuis la carte cliquée, qui s'agrandit jusqu'à remplir l'écran
+    const card = from.closest<HTMLElement>('[data-card]');
+    if (flash && card) {
+      flash.style.setProperty('--c1', card.style.getPropertyValue('--c1'));
+      flash.style.setProperty('--c2', card.style.getPropertyValue('--c2'));
+    }
+    gsap.set(panel, { yPercent: 0, y: 0, clipPath: reduce ? FULL : cardClip(from) });
     gsap.timeline()
       .to(veil, { opacity: 1, duration: 0.5 })
-      .to(panel, { y: 0, yPercent: 0, duration: 0.9, ease: 'expo.out' }, 0)
+      .to('.projects', { scale: 0.93, autoAlpha: 0.5, duration: 0.9, ease: 'expo.out' }, 0)
+      .fromTo(flash, { opacity: 1 }, { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, 0.15)
+      .to(panel, { clipPath: FULL, duration: 0.95, ease: 'expo.inOut' }, 0)
       .fromTo(closeBtn, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 0.5)
-      .from($$('.modal__head > *, .modal__video, .modal__text, .modal__next', current), { y: 40, autoAlpha: 0, duration: 0.9, stagger: 0.06, ease: 'expo.out' }, 0.25);
+      .from($$('.modal__head > *, .modal__video, .modal__text, .modal__next', current), { y: 60, autoAlpha: 0, duration: 1, stagger: 0.07, ease: 'expo.out' }, 0.45);
     $('.modal__close', m)?.focus({ preventScroll: true });
   };
 
@@ -461,9 +566,11 @@ function modal() {
     gsap.timeline({
       onComplete: () => {
         m.classList.remove('is-open');
+        document.documentElement.classList.remove('fiche-ouverte');
         m.setAttribute('aria-hidden', 'true');
         if (current) $$('iframe[data-src]', current).forEach((f) => f.setAttribute('src', 'about:blank'));
-        gsap.set(panel, { yPercent: 100, y: 0 });
+        gsap.set(panel, { yPercent: 100, y: 0, clipPath: FULL });
+        carouselPaused = false;
         if (dir === 'up') {
           // retour en haut de la liste des projets ; on laisse retomber l'élan du défilement
           lenis.scrollTo(0, { immediate: true, force: true });
@@ -474,10 +581,15 @@ function modal() {
       },
     })
       .to(closeBtn, { autoAlpha: 0, scale: 0.6, duration: 0.3 }, 0)
+      .to('.projects', { scale: 1, autoAlpha: 1, duration: 0.9, ease: 'expo.out', clearProps: 'transform' }, dir === 'up' ? 0.25 : 0.1)
       .to(panel, dir === 'up'
         ? { yPercent: -100, y: 0, duration: 0.9, ease: 'expo.inOut' }
-        : { yPercent: 100, y: 0, duration: 0.7, ease: 'expo.in' }, 0)
-      .to(veil, { opacity: 0, duration: 0.4 }, '-=0.3');
+        : cardRect(opener) && !reduce
+          ? { clipPath: cardClip(opener), y: 0, duration: 0.8, ease: 'expo.inOut' }
+          : { yPercent: 100, y: 0, duration: 0.7, ease: 'expo.in' }, 0)
+      .to(dir === 'down' && cardRect(opener) && !reduce ? flash : {}, { opacity: 1, duration: 0.45, ease: 'power2.in' }, 0.25)
+      .to(veil, { opacity: 0, duration: 0.4 }, '-=0.3')
+      .set(flash, { opacity: 0 });
   };
 
   // continuer à défiler en bas de la fiche ramène à la liste des projets

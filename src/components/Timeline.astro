@@ -36,15 +36,16 @@ const initiales = (n: string) => n.split(/[\s+]+/).filter(Boolean).slice(0, 2).m
 </section>
 
 <style>
-  .tl { background: var(--paper); color: var(--ink); padding-block: clamp(80px, 14vh, 180px); border-radius: 28px; margin-inline: clamp(6px, 1vw, 14px); }
+  .tl { background: var(--paper); color: var(--ink); padding-block: clamp(80px, 14vh, 180px); border-radius: 28px; margin-inline: clamp(6px, 1vw, 14px); box-shadow: 0 0 140px -30px rgba(47, 84, 255, .45), 0 50px 90px -50px rgba(0, 0, 0, .9); }
   .tl .eyebrow { color: #5d5a54; }
   .tl__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(40px, 8vh, 96px); }
   .tl__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(52px, 8vw, 140px); line-height: 1; letter-spacing: -.03em; }
   .tl__list { list-style: none; margin: 0; padding: 0; }
   .tl__row {
     position: relative; display: grid; grid-template-columns: 180px 1.2fr 1fr; gap: 24px; align-items: baseline;
-    padding: 34px 0; transition: padding .5s var(--ease);
+    padding: 34px 0; transition: opacity .45s var(--ease);
   }
+  @media (hover: hover) and (pointer: fine) { .tl__list:hover .tl__row:not(:hover) { opacity: .32; } }
   .tl__row:last-child { border-bottom: 1px solid rgba(13,13,12,.18); }
   .tl__line { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: rgba(13,13,12,.18); transform-origin: left; }
   .tl__period { font-size: 14px; font-weight: 500; letter-spacing: .02em; color: #55524c; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -55,12 +56,12 @@ const initiales = (n: string) => n.split(/[\s+]+/).filter(Boolean).slice(0, 2).m
   .tl__float {
     position: fixed; top: 0; left: 0; z-index: 40; pointer-events: none;
     width: clamp(220px, 22vw, 340px); aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden;
-    opacity: 0; visibility: hidden; box-shadow: 0 30px 60px -20px rgba(13,13,12,.45);
+    opacity: 0; visibility: hidden; box-shadow: 0 50px 90px -25px rgba(13,13,12,.6), 0 30px 70px -30px rgba(47,84,255,.6);
   }
   .tl__float-item { position: absolute; inset: 0; opacity: 0; transition: opacity .35s; }
   .tl__float-item.is-on { opacity: 1; }
   .tl__float-item img { width: 100%; height: 100%; object-fit: cover; }
-  .tl__float-ph { width: 100%; height: 100%; display: grid; place-content: center; justify-items: center; gap: 8px; background: var(--accent); color: var(--on-accent); }
+  .tl__float-ph { width: 100%; height: 100%; display: grid; place-content: center; justify-items: center; gap: 8px; background: radial-gradient(120% 120% at 20% 10%, #6d88ff 0%, var(--accent) 50%, #1c35ba 100%); color: var(--on-accent); }
   .tl__float-ph span { font-family: var(--f-display); font-weight: 900; font-stretch: 125%; font-size: clamp(56px, 6vw, 96px); line-height: 1; letter-spacing: -.03em; }
   .tl__float-ph small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
   @media (hover: none), (pointer: coarse) { .tl__float { display: none; } }

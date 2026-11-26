@@ -35,6 +35,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <div class="preloader__bar"><span></span></div>
     </div>
     <div class="curtain" aria-hidden="true"><span class="curtain__label serif" data-curtain-label>{titre ?? profil.prenom}</span></div>
+    <div class="aura" aria-hidden="true"><i></i><i></i><i data-aura></i></div>
     <div class="grain" aria-hidden="true"></div>
     <Header actif={page} />
     <main id="top" data-page-name={page || 'accueil'}>
@@ -60,8 +61,16 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       html.deja-vu .preloader { display: none; }
       .curtain {
         position: fixed; inset: 0; z-index: 190; background: var(--accent); color: var(--on-accent);
-        display: grid; place-items: center; transform: translateY(101%); pointer-events: none;
+        display: grid; place-items: center; transform: translateY(125%); pointer-events: none;
       }
+      /* bords arrondis du rideau : il arrive et repart en courbe */
+      .curtain::before, .curtain::after, .preloader::after {
+        content: ''; position: absolute; left: -15%; width: 130%; height: 22vh; border-radius: 50%; background: inherit;
+      }
+      .curtain::before { top: -11vh; }
+      .curtain::after, .preloader::after { bottom: -11vh; }
+      .curtain__label { position: relative; z-index: 1; }
+      .preloader > * { position: relative; z-index: 1; }
       html.deja-vu .curtain { transform: translateY(0); }
       .curtain__label { font-size: clamp(64px, 12vw, 200px); line-height: 1; }
     </style>

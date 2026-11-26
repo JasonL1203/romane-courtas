@@ -20,13 +20,16 @@ import { profil } from '../data/site';
 </section>
 
 <style>
-  .contact { padding-top: clamp(120px, 18vh, 200px); overflow: hidden; }
+  .contact { padding-top: clamp(120px, 18vh, 200px); padding-bottom: clamp(30px, 6vh, 70px); }
   .contact__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(52px, 8vw, 140px); line-height: 1; letter-spacing: -.03em; }
   .contact__cta { margin-top: clamp(40px, 8vh, 96px); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 32px; }
   .contact__mail { font-family: var(--f-display); font-size: clamp(24px, 3.4vw, 52px); font-weight: 500; letter-spacing: -.02em; display: inline-block; position: relative; max-width: 100%; overflow-wrap: anywhere; }
   .contact__mail::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease); }
   .contact__mail:hover::after { transform: scaleX(1); transform-origin: left; }
-  .contact__circle { width: clamp(130px, 14vw, 190px); aspect-ratio: 1; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-weight: 600; font-size: 17px; transition: transform .4s var(--ease); }
-  .contact__circle:hover { transform: scale(1.06); }
+  .contact__circle { width: clamp(130px, 14vw, 190px); aspect-ratio: 1; border-radius: 50%; color: var(--on-accent); display: grid; place-items: center; font-weight: 600; font-size: 17px; transition: scale .5s var(--ease), box-shadow .5s var(--ease);
+    background: radial-gradient(circle at 32% 24%, #7d95ff 0%, var(--accent) 46%, #1b33b4 100%);
+    box-shadow: 0 34px 70px -18px rgba(47, 84, 255, .7), 0 12px 24px -10px rgba(0, 0, 0, .6), 0 2px 0 rgba(255, 255, 255, .35) inset, 0 -16px 34px rgba(4, 10, 60, .45) inset;
+  }
+  .contact__circle:hover { scale: 1.07; box-shadow: 0 46px 90px -18px rgba(47, 84, 255, .9), 0 14px 28px -10px rgba(0, 0, 0, .6), 0 2px 0 rgba(255, 255, 255, .4) inset, 0 -16px 34px rgba(4, 10, 60, .45) inset; }
 
 </style>
