@@ -17,13 +17,13 @@ const rangee = [...mots, ...mots];
 
 <style>
   .marquee { padding: clamp(40px, 8vh, 96px) 0; overflow: hidden; }
-  .marquee__row { display: flex; white-space: nowrap; transform: rotate(-2deg); background: var(--accent); color: var(--ink); padding: 14px 0; }
+  .marquee__row { display: flex; white-space: nowrap; transform: rotate(-2deg); background: var(--accent); color: var(--on-accent); padding: 14px 0; }
   .marquee__row--alt { transform: rotate(1.5deg); background: transparent; color: var(--fg); border-block: 1px solid var(--line); margin-top: -6px; }
   .marquee__track { display: flex; flex-shrink: 0; will-change: transform; }
   .marquee__track span {
     display: inline-flex; align-items: center; gap: .5em; padding-right: .5em;
-    font-family: var(--f-display); font-weight: 700; font-size: clamp(36px, 6vw, 88px); letter-spacing: -.03em; line-height: 1;
+    font-family: var(--f-display); font-weight: 800; font-stretch: 118%; text-transform: uppercase; font-size: clamp(32px, 5.4vw, 80px); letter-spacing: -.02em; line-height: 1;
   }
-  .marquee__track span.serif { font-family: var(--f-serif); font-weight: 400; font-style: italic; }
+  .marquee__track span.serif { font-family: var(--f-serif); font-weight: 400; font-style: italic; font-stretch: 100%; text-transform: none; font-size: clamp(38px, 6.4vw, 96px); letter-spacing: 0; }
   .marquee__track b { font-size: .45em; font-weight: 400; }
 </style>

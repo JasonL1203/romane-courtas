@@ -30,7 +30,7 @@ import { pages, url } from '../data/pages';
     transform: scaleY(0); transform-origin: bottom; transition: transform .6s var(--ease);
   }
   .menu__link:hover::before, .menu__link:focus-visible::before { transform: scaleY(1); }
-  .menu__link:hover { color: var(--ink); }
+  .menu__link:hover { color: var(--on-accent); }
   .menu__num { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-left: 8px; transition: color .3s; }
   .menu__label { font-family: var(--f-display); font-weight: 700; font-size: clamp(48px, 8vw, 132px); line-height: .9; letter-spacing: -.045em; transition: translate .6s var(--ease); }
   .menu__link:hover .menu__label { translate: 20px 0; font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }

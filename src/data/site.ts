@@ -70,7 +70,7 @@ export const projets: Projet[] = [
       '[À COMPLÉTER] Le contexte du projet scolaire, le film concerné, la consigne.',
       '[À COMPLÉTER] Ce qui a été fait : écriture, tournage, montage, étalonnage, son.',
     ],
-    teinte: ['#ff5a1f', '#3b0d02'],
+    teinte: ['#2ee6c5', '#02261f'],
   },
   {
     slug: 'short-com',

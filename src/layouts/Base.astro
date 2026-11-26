@@ -47,19 +47,19 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <style is:global>
       .preloader {
         position: fixed; inset: 0; z-index: 200;
-        background: var(--accent); color: var(--ink);
+        background: var(--accent); color: var(--on-accent);
         display: flex; flex-direction: column; justify-content: flex-end;
         padding: var(--gutter);
       }
       .preloader__inner { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
       .preloader__name { font-family: var(--f-display); font-size: clamp(22px, 3vw, 36px); font-weight: 600; }
-      .preloader__name .serif { color: var(--ink); opacity: .7; }
+      .preloader__name .serif { color: var(--on-accent); opacity: .75; }
       .preloader__count { font-family: var(--f-display); font-weight: 700; font-size: clamp(72px, 16vw, 220px); line-height: .8; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
-      .preloader__bar { height: 2px; background: rgba(13,13,12,.2); margin-top: 24px; }
-      .preloader__bar span { display: block; height: 100%; width: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0); }
+      .preloader__bar { height: 2px; background: rgba(244,242,238,.25); margin-top: 24px; }
+      .preloader__bar span { display: block; height: 100%; width: 100%; background: var(--on-accent); transform-origin: left; transform: scaleX(0); }
       html.deja-vu .preloader { display: none; }
       .curtain {
-        position: fixed; inset: 0; z-index: 190; background: var(--accent); color: var(--ink);
+        position: fixed; inset: 0; z-index: 190; background: var(--accent); color: var(--on-accent);
         display: grid; place-items: center; transform: translateY(101%); pointer-events: none;
       }
       html.deja-vu .curtain { transform: translateY(0); }
