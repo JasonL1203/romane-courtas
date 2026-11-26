@@ -94,6 +94,9 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
   .carousel__edge--r { right: 0; justify-content: flex-end; padding-right: var(--gutter); background: linear-gradient(-90deg, var(--bg), transparent); }
   .carousel.go-left .carousel__edge--l, .carousel.go-right .carousel__edge--r { opacity: 1; }
 
+  /* la piste ne capte pas les clics : en 3D son plan passe devant les cartes qui reculent */
+  .projects__track { pointer-events: none; }
+  .card { pointer-events: auto; }
   .card { flex: 0 0 auto; width: clamp(230px, 22.5vw, 360px); transform-style: preserve-3d; will-change: transform; }
   .card__btn { display: block; width: 100%; text-align: left; cursor: pointer; transform-style: preserve-3d; }
   .card__media {
