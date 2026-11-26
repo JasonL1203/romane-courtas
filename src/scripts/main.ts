@@ -250,6 +250,39 @@ function scrollAnimations() {
     );
   });
 
+  // parcours : image qui suit la souris au survol d'une ligne
+  const float = $('[data-float]');
+  if (float && finePointer) {
+    gsap.set(float, { xPercent: -50, yPercent: -50, scale: 0.8 });
+    const fx = gsap.quickTo(float, 'x', { duration: 0.5, ease: 'power3' });
+    const fy = gsap.quickTo(float, 'y', { duration: 0.5, ease: 'power3' });
+    const fr = gsap.quickTo(float, 'rotate', { duration: 0.6, ease: 'power3' });
+    let lastX = 0;
+    $$('[data-float-row]').forEach((row) => {
+      row.addEventListener('pointerenter', (e) => {
+        $$('[data-float-item]', float).forEach((it) => it.classList.toggle('is-on', it.dataset.floatItem === row.dataset.floatRow));
+        if (float.style.visibility !== 'inherit') gsap.set(float, { x: e.clientX + 180, y: e.clientY });
+        lastX = e.clientX;
+        gsap.to(float, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'power3.out', overwrite: 'auto' });
+      });
+      row.addEventListener('pointermove', (e) => {
+        // l'image se place à droite du pointeur, sans sortir de l'écran
+        const w = float.offsetWidth;
+        fx(Math.min(e.clientX + 40 + w / 2, window.innerWidth - w / 2 - 16));
+        fy(e.clientY);
+        fr(gsap.utils.clamp(-8, 8, (e.clientX - lastX) * 0.4));
+        lastX = e.clientX;
+      });
+    });
+    $('.tl__list')?.addEventListener('pointerleave', () => {
+      gsap.to(float, { autoAlpha: 0, scale: 0.8, duration: 0.3, ease: 'power2.in', overwrite: 'auto' });
+      fr(0);
+    });
+    lenis.on('scroll', () => {
+      if (!$('.tl__row:hover')) gsap.to(float, { autoAlpha: 0, scale: 0.8, duration: 0.2, overwrite: 'auto' });
+    });
+  }
+
   // grand prénom en bas de page
   if ($('[data-giant]')) gsap.from('[data-giant]', {
     yPercent: 40,

@@ -139,7 +139,9 @@ export const projets: Projet[] = [
   },
 ];
 
-export const parcours = [
+// Pour chaque étape : image (logo ou photo) affichée au survol.
+// Mettre le fichier dans /public/parcours/ puis ajouter  image: 'parcours/mon-image.jpg'
+export const parcours: { periode: string; structure: string; poste: string; texte: string; image?: string }[] = [
   {
     periode: '20XX — 20XX', // [À COMPLÉTER]
     structure: 'Canal+ Sport',
