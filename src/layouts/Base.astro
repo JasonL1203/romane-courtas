@@ -34,7 +34,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       </div>
       <div class="preloader__bar"><span></span></div>
     </div>
-    <div class="curtain" aria-hidden="true"><span class="curtain__label serif" data-curtain-label>{titre ?? profil.prenom}</span></div>
+    <div class="curtain" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
     <div class="aura" aria-hidden="true"><i></i><i></i><i data-aura></i></div>
     <div class="grain" aria-hidden="true"></div>
     <Header actif={page} />
@@ -59,20 +59,18 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       .preloader__bar { height: 2px; background: rgba(244,242,238,.25); margin-top: 24px; }
       .preloader__bar span { display: block; height: 100%; width: 100%; background: var(--on-accent); transform-origin: left; transform: scaleX(0); }
       html.deja-vu .preloader { display: none; }
-      .curtain {
-        position: fixed; inset: 0; z-index: 190; background: var(--accent); color: var(--on-accent);
-        display: grid; place-items: center; transform: translateY(125%); pointer-events: none;
+      /* transition entre pages : cinq volets qui montent en décalé */
+      .curtain { position: fixed; inset: 0; z-index: 190; display: flex; pointer-events: none; }
+      .curtain i {
+        flex: 1 1 0; margin-right: -1px; height: 100%; transform: translateY(101%); will-change: transform;
+        background: linear-gradient(180deg, #4a6bff 0%, var(--accent) 38%, #1d38c4 100%);
+        box-shadow: -18px 0 40px -18px rgba(3, 8, 50, .55) inset;
       }
-      /* bords arrondis du rideau : il arrive et repart en courbe */
-      .curtain::before, .curtain::after, .preloader::after {
-        content: ''; position: absolute; left: -15%; width: 130%; height: 22vh; border-radius: 50%; background: inherit;
+      html.deja-vu .curtain i { transform: translateY(0); }
+      .preloader::after {
+        content: ''; position: absolute; left: -15%; width: 130%; height: 22vh; border-radius: 50%; background: inherit; bottom: -11vh;
       }
-      .curtain::before { top: -11vh; }
-      .curtain::after, .preloader::after { bottom: -11vh; }
-      .curtain__label { position: relative; z-index: 1; }
       .preloader > * { position: relative; z-index: 1; }
-      html.deja-vu .curtain { transform: translateY(0); }
-      .curtain__label { font-size: clamp(64px, 12vw, 200px); line-height: 1; }
     </style>
   </body>
 </html>

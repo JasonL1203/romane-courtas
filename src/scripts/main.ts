@@ -49,7 +49,7 @@ const flush = () => {
 
 /* ── Transitions entre les pages ────────────────────── */
 const curtain = $('.curtain');
-const curtainLabel = $('[data-curtain-label]');
+const volets = $$('.curtain i');
 function pageLinks() {
   $$<HTMLAnchorElement>('a[data-page]').forEach((a) =>
     a.addEventListener('click', (e) => {
@@ -62,22 +62,20 @@ function pageLinks() {
         return;
       }
       e.preventDefault();
-      if (curtainLabel) curtainLabel.textContent = a.dataset.label || a.textContent?.trim() || '';
       lenis.stop();
+      // la page recule légèrement pendant que les volets montent l'un après l'autre
+      gsap.to('main, .footer', { scale: 0.97, autoAlpha: 0.4, duration: 0.7, ease: 'power3.inOut' });
       gsap.fromTo(
-        curtain,
-        { y: 0, yPercent: 125 },
-        { yPercent: 0, duration: 0.95, ease: 'expo.inOut', onComplete: () => (location.href = href) },
+        volets,
+        { y: 0, yPercent: 101 },
+        { yPercent: 0, duration: 0.62, ease: 'expo.inOut', stagger: 0.055, onComplete: () => (location.href = href) },
       );
-      // la page qui part recule et s'assombrit sous le rideau
-      gsap.to('main, .footer', { y: -90, scale: 0.96, autoAlpha: 0.35, duration: 0.95, ease: 'expo.inOut' });
-      gsap.fromTo(curtainLabel, { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, delay: 0.35, ease: 'expo.out' });
     }),
   );
-  // retour arrière du navigateur : on retire le rideau
+  // retour arrière du navigateur : on retire les volets
   window.addEventListener('pageshow', (e) => {
     if (e.persisted && curtain) {
-      gsap.set(curtain, { y: 0, yPercent: 125 });
+      gsap.set(volets, { y: 0, yPercent: 101 });
       gsap.set('main, .footer', { clearProps: 'transform,opacity,visibility' });
       lenis.start();
     }
@@ -97,11 +95,11 @@ function intro() {
 
   if (dejaVu && curtain) {
     // arrivée depuis une autre page : le rideau remonte
-    if (curtainLabel && !reduce) tl.to(curtainLabel, { yPercent: -60, autoAlpha: 0, duration: 0.6, ease: 'expo.in' }, 0);
-    tl.fromTo(curtain, { y: 0, yPercent: 0 }, { yPercent: -125, duration: reduce ? 0 : 1.1, ease: 'expo.inOut' }, 0.1)
-      .set(curtain, { yPercent: 125 })
-      .set(curtainLabel, { yPercent: 0, autoAlpha: 1 })
-      .add(flush, reduce ? 0 : 0.55);
+    // arrivée depuis une autre page : les volets continuent vers le haut, le contenu apparaît dessous
+    tl.fromTo(volets, { y: 0, yPercent: 0 }, { yPercent: -101, duration: reduce ? 0 : 0.8, ease: 'expo.inOut', stagger: reduce ? 0 : 0.055 }, 0.05)
+      .set(volets, { yPercent: 101 })
+      .fromTo('main, .footer', { autoAlpha: 0 }, { autoAlpha: 1, duration: reduce ? 0 : 0.9, ease: 'power2.out' }, 0.2)
+      .add(flush, reduce ? 0 : 0.4);
   } else if (pre && count && !reduce) {
     tl.to(obj, {
       v: 100,
