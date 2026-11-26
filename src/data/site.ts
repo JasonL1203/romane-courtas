@@ -141,29 +141,34 @@ export const projets: Projet[] = [
 
 // Pour chaque étape : image (logo ou photo) affichée au survol.
 // Mettre le fichier dans /public/parcours/ puis ajouter  image: 'parcours/mon-image.jpg'
+// [À COMPLÉTER] dates et textes FICTIFS, en attendant les vraies informations.
 export const parcours: { periode: string; structure: string; poste: string; texte: string; image?: string }[] = [
   {
-    periode: '20XX — 20XX', // [À COMPLÉTER]
+    periode: '2024 — 2025',
     structure: 'Canal+ Sport',
-    poste: 'Alternance · Gestion',
-    texte: '[À COMPLÉTER] Missions de gestion au sein de Canal+ Sport.',
+    poste: 'Alternance · Gestion de production',
+    texte:
+      'Suivi des budgets de tournage des magazines foot et rugby, préparation des devis prestataires et coordination des plannings entre rédaction, équipes techniques et régie.',
   },
   {
-    periode: '20XX — 20XX',
+    periode: '2023 — 2024',
     structure: 'CSTART',
     poste: 'Alternance · Gestion',
-    texte: '[À COMPLÉTER] Missions de gestion chez CSTART.',
+    texte:
+      'Gestion administrative de projets audiovisuels : contrats des intervenants, suivi des factures, tableaux de bord de production et lien quotidien avec les clients.',
   },
   {
-    periode: '20XX — 20XX',
+    periode: '2022 — 2023',
     structure: 'MyFuture',
     poste: 'Alternance · Organisation & réalisation des tournages',
-    texte: '[À COMPLÉTER] Préparation, planning, tournage et suivi des vidéos.',
+    texte:
+      'Une trentaine de vidéos produites dans l’année : repérages, feuilles de service, tournage en petite équipe, puis suivi du montage jusqu’à la livraison.',
   },
   {
-    periode: '2024',
+    periode: 'Juillet — août 2024',
     structure: 'Jeux Olympiques de Paris',
     poste: 'Événementiel sportif',
-    texte: '[À COMPLÉTER] Aide à l’organisation pendant les Jeux.',
+    texte:
+      'Renfort sur un site de compétition : accueil des équipes médias, gestion des accréditations et coordination des flux le jour des épreuves.',
   },
 ];
