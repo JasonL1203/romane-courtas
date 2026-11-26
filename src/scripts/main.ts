@@ -63,7 +63,17 @@ function pageLinks() {
         lenis.scrollTo(0, { duration: 1.2 });
         return;
       }
-      if (vt) return;
+      if (vt) {
+        // on retient l'endroit du clic : l'onde de transition partira de là, sur les deux pages
+        const x = e.clientX || window.innerWidth / 2;
+        const y = e.clientY || window.innerHeight / 2;
+        document.documentElement.style.setProperty('--vx', `${x}px`);
+        document.documentElement.style.setProperty('--vy', `${y}px`);
+        try {
+          sessionStorage.setItem('pf-clic', `${Math.round(x)},${Math.round(y)}`);
+        } catch {}
+        return;
+      }
       e.preventDefault();
       lenis.stop();
       // la page recule légèrement pendant que les volets montent l'un après l'autre
@@ -98,7 +108,7 @@ function intro() {
 
   if (dejaVu && vt) {
     // la page arrive en glissant : on lance les apparitions pendant qu'elle monte
-    tl.add(flush, 0.3);
+    tl.add(flush, 0.45);
   } else if (dejaVu && curtain) {
     // arrivée depuis une autre page : le rideau remonte
     // arrivée depuis une autre page : les volets continuent vers le haut, le contenu apparaît dessous
