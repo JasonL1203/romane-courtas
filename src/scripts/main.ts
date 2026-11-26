@@ -235,14 +235,6 @@ function scrollAnimations() {
     scrollTrigger: { trigger: '.about__skills', start: 'top 85%' },
   });
 
-  // parallaxe du portrait
-  $$('[data-parallax]').forEach((el) => {
-    gsap.fromTo(
-      $('.about__photo-inner', el),
-      { yPercent: -8 },
-      { yPercent: 8, ease: 'none', scrollTrigger: { trigger: el, scrub: true } },
-    );
-  });
 
   // projets : carrousel horizontal automatique, piloté par la souris
   carousel();
