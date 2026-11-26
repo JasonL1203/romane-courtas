@@ -170,3 +170,37 @@ h1, h2, h3, .display { font-family: var(--f-display); font-stretch: 112%; text-w
 main, .footer { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .aura i { animation: none; } }
 html.fiche-ouverte main { z-index: 130; }
+
+/* page Projets : tout tient dans la hauteur de l'écran, sans défilement */
+main[data-page-name='projets'] { --card-h: clamp(170px, calc(100svh - 535px), 680px); }
+main[data-page-name='projets'] .page-pad { padding-top: clamp(84px, 11vh, 120px); }
+main[data-page-name='projets'] .projects { padding-block: 0; }
+main[data-page-name='projets'] .projects__intro { margin-bottom: clamp(8px, 2vh, 24px); }
+main[data-page-name='projets'] .projects__title { font-size: clamp(40px, min(8vw, 11vh), 120px); }
+main[data-page-name='projets'] .carousel { padding-block: 22px 34px; }
+main[data-page-name='projets'] .card { width: min(calc(var(--card-h) * .8), 72vw); }
+main[data-page-name='projets'] .card__info { padding-top: 16px; }
+main[data-page-name='projets'] .card__title { font-size: clamp(16px, calc(var(--card-h) * .068), 30px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+main[data-page-name='projets'] .card__cat { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+main[data-page-name='projets'] .card__big { font-size: clamp(22px, calc(var(--card-h) * .15), 72px); }
+body:has(main[data-page-name='projets']) { display: flex; flex-direction: column; min-height: 100svh; }
+body:has(main[data-page-name='projets']) main { flex: 1 0 auto; }
+body:has(main[data-page-name='projets']) .footer { padding-top: 0; }
+body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 20px; padding-top: 20px; }
+/* écrans peu hauts : on resserre tout pour garder de grandes cartes */
+@media (max-height: 780px) {
+  main[data-page-name='projets'] { --card-h: clamp(170px, calc(100svh - 374px), 680px); }
+  main[data-page-name='projets'] .page-pad { padding-top: 72px; }
+  main[data-page-name='projets'] .projects__title { font-size: clamp(34px, 8.5vh, 64px); }
+  main[data-page-name='projets'] .projects__intro { margin-bottom: 4px; }
+  main[data-page-name='projets'] .carousel { padding-block: 16px 26px; }
+  main[data-page-name='projets'] .card__info { padding-top: 12px; }
+  body:has(main[data-page-name='projets']) .footer__links { margin-bottom: 12px; padding-top: 14px; }
+  body:has(main[data-page-name='projets']) .footer__links a { font-size: 20px; }
+}
+/* écrans étroits : la carte prend toute la hauteur disponible */
+@media (max-width: 900px) {
+  main[data-page-name='projets'] { --card-h: clamp(170px, calc(100svh - 420px), 680px); }
+  main[data-page-name='projets'] .card { width: 72vw; }
+  main[data-page-name='projets'] .card__media { aspect-ratio: auto; height: var(--card-h); }
+}
