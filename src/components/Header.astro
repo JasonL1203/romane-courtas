@@ -9,7 +9,7 @@ const { actif = '' } = Astro.props;
   <nav class="header__nav" aria-label="Navigation principale">
     {pages.map((p) => (
       <a href={url(p.slug)} data-page data-label={p.label} aria-current={actif === p.slug ? 'page' : undefined}>
-        <span data-roll={p.label}>{p.label}</span>
+        {p.label}
       </a>
     ))}
   </nav>
@@ -27,18 +27,14 @@ const { actif = '' } = Astro.props;
   .header__logo { font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -.02em; }
   .header__logo .accent { color: #fff; }
   .header__nav { display: flex; gap: clamp(14px, 2.4vw, 36px); font-size: 14px; }
-  .header__nav a { overflow: hidden; display: block; height: 1.4em; line-height: 1.4em; position: relative; }
-  .header__nav span { display: block; position: relative; transition: transform .5s var(--ease); }
-  .header__nav span::after { content: attr(data-roll); position: absolute; left: 0; top: 100%; }
-  .header__nav a:hover span { transform: translateY(-100%); }
-  .header__nav a[aria-current='page'] { font-style: italic; font-family: var(--f-serif); font-size: 17px; }
-  .header__nav a[aria-current='page']::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #fff; }
+  .header__nav a { display: block; position: relative; line-height: 1.4em; opacity: .7; }
+  .header__nav a:hover, .header__nav a[aria-current='page'] { opacity: 1; }
+  .header__nav a[aria-current='page']::before { content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: #fff; }
   .header__status { font-size: 13px; display: inline-flex; align-items: center; gap: 8px; }
   .header__status i { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: pulse 1.8s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
   @media (max-width: 720px) {
     .header__status { display: none; }
     .header__nav { gap: 14px; font-size: 13px; }
-    .header__nav a[aria-current='page'] { font-size: 15px; }
   }
 </style>
