@@ -528,6 +528,7 @@ function modal() {
   let pull = 0;
   let closing = false;
   const flash = $('[data-flash]', m);
+  const section = $('.projects');
   const FULL = 'inset(0px 0px 0px 0px round 0px)';
   // découpe de la fiche aux dimensions de la carte (ou null si la carte n'est plus à l'écran)
   const cardRect = (from: HTMLElement | null) => {
@@ -556,20 +557,31 @@ function modal() {
     pull = 0;
     closing = false;
     carouselPaused = true;
-    // la fiche s'ouvre depuis la carte cliquée, qui s'agrandit jusqu'à remplir l'écran
-    const card = from.closest<HTMLElement>('[data-card]');
-    if (flash && card) {
-      flash.style.setProperty('--c1', card.style.getPropertyValue('--c1'));
-      flash.style.setProperty('--c2', card.style.getPropertyValue('--c2'));
+    // on plonge dans la carte cliquée : elle grossit jusqu'à remplir l'écran, puis la fiche arrive de loin
+    const r = cardRect(from);
+    let plongee: gsap.TweenVars = { scale: 1 };
+    if (section && r && !reduce) {
+      const sr = section.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      gsap.set(section, { transformOrigin: `${cx - sr.left}px ${cy - sr.top}px` });
+      plongee = {
+        scale: Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.2,
+        x: window.innerWidth / 2 - cx,
+        y: window.innerHeight / 2 - cy,
+        filter: 'blur(8px)',
+      };
     }
-    gsap.set(panel, { yPercent: 0, y: 0, clipPath: reduce ? FULL : cardClip(from) });
+    if (flash) gsap.set(flash, { opacity: 0 });
+    gsap.set(panel, { yPercent: 0, y: 0, clipPath: FULL, scale: reduce ? 1 : 0.55, autoAlpha: 0, filter: reduce ? 'none' : 'blur(14px)' });
     gsap.timeline()
-      .to(veil, { opacity: 1, duration: 0.5 })
-      .to('.projects', { scale: 0.93, autoAlpha: 0.5, duration: 0.9, ease: 'expo.out' }, 0)
-      .fromTo(flash, { opacity: 1 }, { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, 0.15)
-      .to(panel, { clipPath: FULL, duration: 0.95, ease: 'expo.inOut' }, 0)
-      .fromTo(closeBtn, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 0.5)
-      .from($$('.modal__head > *, .modal__video, .modal__text, .modal__next', current), { y: 60, autoAlpha: 0, duration: 1, stagger: 0.07, ease: 'expo.out' }, 0.45);
+      .to(section, { ...plongee, duration: 0.85, ease: 'power3.in' }, 0)
+      .to('.footer, [data-header]', { autoAlpha: 0, duration: 0.25 }, 0)
+      .to(section, { autoAlpha: 0, duration: 0.3, ease: 'power1.in' }, 0.6)
+      .to(veil, { opacity: 1, duration: 0.4 }, 0.5)
+      .to(panel, { scale: 1, autoAlpha: 1, filter: 'blur(0px)', duration: 0.95, ease: 'expo.out', clearProps: 'filter' }, 0.6)
+      .fromTo(closeBtn, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1)
+      .from($$('.modal__head > *, .modal__video, .modal__text, .modal__next', current), { y: 60, autoAlpha: 0, duration: 1, stagger: 0.07, ease: 'expo.out' }, 0.8);
     $('.modal__close', m)?.focus({ preventScroll: true });
   };
 
@@ -583,7 +595,7 @@ function modal() {
         document.documentElement.classList.remove('fiche-ouverte');
         m.setAttribute('aria-hidden', 'true');
         if (current) $$('iframe[data-src]', current).forEach((f) => f.setAttribute('src', 'about:blank'));
-        gsap.set(panel, { yPercent: 100, y: 0, clipPath: FULL });
+        gsap.set(panel, { yPercent: 100, y: 0, clipPath: FULL, scale: 1, clearProps: 'filter' });
         carouselPaused = false;
         if (dir === 'up') {
           // retour en haut de la liste des projets ; on laisse retomber l'élan du défilement
@@ -595,15 +607,16 @@ function modal() {
       },
     })
       .to(closeBtn, { autoAlpha: 0, scale: 0.6, duration: 0.3 }, 0)
-      .to('.projects', { scale: 1, autoAlpha: 1, duration: 0.9, ease: 'expo.out', clearProps: 'transform' }, dir === 'up' ? 0.25 : 0.1)
+      // la fiche repart au loin (ou vers le haut), puis on ressort de la carte
       .to(panel, dir === 'up'
-        ? { yPercent: -100, y: 0, duration: 0.9, ease: 'expo.inOut' }
-        : cardRect(opener) && !reduce
-          ? { clipPath: cardClip(opener), y: 0, duration: 0.8, ease: 'expo.inOut' }
-          : { yPercent: 100, y: 0, duration: 0.7, ease: 'expo.in' }, 0)
-      .to(dir === 'down' && cardRect(opener) && !reduce ? flash : {}, { opacity: 1, duration: 0.45, ease: 'power2.in' }, 0.25)
-      .to(veil, { opacity: 0, duration: 0.4 }, '-=0.3')
-      .set(flash, { opacity: 0 });
+        ? { yPercent: -100, y: 0, duration: 0.8, ease: 'expo.inOut' }
+        : reduce
+          ? { autoAlpha: 0, duration: 0.3 }
+          : { scale: 0.55, autoAlpha: 0, filter: 'blur(14px)', y: 0, duration: 0.55, ease: 'power3.in' }, 0)
+      .to(veil, { opacity: 0, duration: 0.4 }, 0.3)
+      .to('.footer, [data-header]', { autoAlpha: 1, duration: 0.6 }, 0.7)
+      .to(section, { autoAlpha: 1, duration: 0.3, ease: 'power1.out' }, dir === 'up' ? 0.45 : 0.4)
+      .to(section, { scale: 1, x: 0, y: 0, filter: 'blur(0px)', duration: 0.95, ease: 'expo.out', clearProps: 'transform,filter,transformOrigin' }, dir === 'up' ? 0.45 : 0.4);
   };
 
   // continuer à défiler en bas de la fiche ramène à la liste des projets
