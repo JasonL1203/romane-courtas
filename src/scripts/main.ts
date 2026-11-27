@@ -358,8 +358,8 @@ function carousel() {
   const paint = () => {
     track.style.transform = `translate3d(${x}px,0,0)`;
     if (reduce) return;
-    const angle = vw < 900 ? 16 : 30;
-    const depth = vw < 900 ? 70 : 210;
+    const angle = vw < 900 ? 20 : 36;
+    const depth = vw < 900 ? 110 : 280;
     for (let i = 0; i < cards.length; i++) {
       const n = gsap.utils.clamp(-1.5, 1.5, (geo[i].c + x - vw / 2) / (vw / 2));
       cards[i].style.transform = `translate3d(0,0,${(-n * n * depth).toFixed(1)}px) rotateY(${(n * angle).toFixed(2)}deg)`;
@@ -466,8 +466,8 @@ function tilt() {
       const px = gsap.utils.clamp(0, 1, (e.clientX - r.left) / r.width);
       const py = gsap.utils.clamp(0, 1, (e.clientY - r.top) / r.height);
       btn.classList.add('is-tilting');
-      media.style.setProperty('--ry', `${((px - 0.5) * 16).toFixed(2)}deg`);
-      media.style.setProperty('--rx', `${((0.5 - py) * 14).toFixed(2)}deg`);
+      media.style.setProperty('--ry', `${((px - 0.5) * 22).toFixed(2)}deg`);
+      media.style.setProperty('--rx', `${((0.5 - py) * 18).toFixed(2)}deg`);
       media.style.setProperty('--gx', `${(px * 100).toFixed(1)}%`);
       media.style.setProperty('--gy', `${(py * 100).toFixed(1)}%`);
     });
