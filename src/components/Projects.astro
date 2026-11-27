@@ -86,7 +86,7 @@ const embedUrl = (v?: { plateforme: 'youtube' | 'vimeo'; id: string }) =>
   .projects__title { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(52px, 8vw, 140px); line-height: 1; letter-spacing: -.03em; }
   .projects__hint { margin: 0; color: var(--muted); font-size: 14px; max-width: 30ch; text-align: right; }
 
-  .carousel { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; perspective: 1500px; padding-block: 30px 70px; }
+  .carousel { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; perspective: 1400px; perspective-origin: 50% 35%; padding-block: 30px 70px; }
   
   .projects__track { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(16px, 2.4vw, 36px); width: max-content; will-change: transform; transform-style: preserve-3d; }
   .carousel__edge { position: absolute; top: 0; bottom: 0; width: 12vw; pointer-events: none; display: flex; align-items: center; opacity: .0; transition: opacity .4s; color: var(--fg); font-size: 28px; }

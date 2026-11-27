@@ -355,6 +355,13 @@ function carousel() {
   };
   measure();
   window.addEventListener('resize', measure);
+  // inclinaison de toute la scène : on regarde le tambour légèrement d'en dessous,
+  // et la scène pivote doucement vers la souris
+  const BASE_RX = vw < 900 ? 7 : 10;
+  let tiltX = BASE_RX;
+  let tiltY = 0;
+  let wantX = BASE_RX;
+  let wantY = 0;
   const paint = () => {
     track.style.transform = `translate3d(${x}px,0,0)`;
     if (reduce) return;
@@ -362,10 +369,21 @@ function carousel() {
     const depth = vw < 900 ? 110 : 280;
     for (let i = 0; i < cards.length; i++) {
       const n = gsap.utils.clamp(-1.5, 1.5, (geo[i].c + x - vw / 2) / (vw / 2));
-      cards[i].style.transform = `translate3d(0,0,${(-n * n * depth).toFixed(1)}px) rotateY(${(n * angle).toFixed(2)}deg)`;
+      // les cartes se dressent sur un arc : celles des côtés reculent, tournent et s'abaissent un peu
+      cards[i].style.transform =
+        `translate3d(0,${(n * n * 26).toFixed(1)}px,${(-n * n * depth).toFixed(1)}px) ` +
+        `rotateX(${tiltX.toFixed(2)}deg) rotateY(${(n * angle + tiltY).toFixed(2)}deg)`;
     }
   };
   paint();
+  if (finePointer && !reduce) {
+    window.addEventListener('pointermove', (e) => {
+      const nx = e.clientX / window.innerWidth - 0.5;
+      const ny = e.clientY / window.innerHeight - 0.5;
+      wantY = nx * 14;
+      wantX = BASE_RX - ny * 12;
+    });
+  }
   const loop = () => {
     const w = half();
     if (w <= 0) return;
@@ -447,6 +465,8 @@ function carousel() {
 
   gsap.ticker.add((_, dt) => {
     if (!visible || dragging || wheeling || carouselPaused) return;
+    tiltX += (wantX - tiltX) * Math.min(1, dt / 220);
+    tiltY += (wantY - tiltY) * Math.min(1, dt / 220);
     const t = hovering ? target : -BASE;
     speed += (t - speed) * Math.min(1, dt / 250); // accélération douce
     x += speed * dt;
